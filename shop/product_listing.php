@@ -17,11 +17,12 @@
         <?php
         // include database connection
         include 'config/database.php';
+        include 'menu.php';
 
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT id, name, description, price FROM products ORDER BY id DESC";
+        $query = "SELECT id, name, description, price, product_cat_name FROM products INNER JOIN product_cat ON products.product_cat = product_cat_id ORDER BY id DESC";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -41,6 +42,7 @@
             echo "<th>ID</th>";
             echo "<th>Name</th>";
             echo "<th>Description</th>";
+            echo "<th>Product Category</th>";
             echo "<th>Price</th>";
             echo "<th>Action</th>";
             echo "</tr>";
@@ -55,6 +57,7 @@
                 echo "<td>{$id}</td>";
                 echo "<td>{$name}</td>";
                 echo "<td>{$description}</td>";
+                echo "<td>[$product_cat_name]</td>";
                 echo "<td>{$price}</td>";
                 echo "<td>";
                 // read one record

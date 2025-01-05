@@ -17,6 +17,7 @@
         <?php
         // include database connection
         include 'config/database.php';
+        include 'menu.php';
 
         // delete message prompt will be here
 

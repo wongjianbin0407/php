@@ -20,6 +20,8 @@
         <!-- html form to create product will be here -->
         <!-- PHP insert code will be here -->
         <?php
+        include 'menu.php';
+
         if ($_POST) {
             // include database connection
             include 'config/database.php';

@@ -20,6 +20,17 @@
         <!-- html form to create product will be here -->
         <!-- PHP insert code will be here -->
         <?php
+        // include database connection
+        include 'config/database.php';
+        include 'menu.php';
+
+        // delete message prompt will be here
+
+        // select all data
+        $query = "SELECT product_cat_id, product_cat_name, product_cat_description FROM product_cat ORDER BY product_cat_id ASC";
+        $stmt = $con->prepare($query);
+        $stmt->execute();
+
         if ($_POST) {
             // include database connection
             include 'config/database.php';
@@ -28,6 +39,8 @@
                 $name = $_POST['name'];
                 $description = $_POST['description'];
                 $price = $_POST['price'];
+                $manufacture_date = $_POST['manufacture_date'];
+                $expired_date = $_POST['expired_date'];
                 $errors = [];
 
                 if (empty($name)) {
@@ -38,6 +51,18 @@
                 }
                 if (empty($price)) {
                     $errors[] = "Price is required.";
+                }
+                if (empty($manu)) {
+                    $errors[] = "Price is required.";
+                }
+                if (empty($price)) {
+                    $errors[] = "Price is required.";
+                }
+                if (empty($mnufacture_date)) {
+                    $errors[] = "Manufacture date is required.";
+                }
+                if (empty($expired_date)) {
+                    $errors[] = "Expired date is required.";
                 }
 
                 // If there are errors, display them
@@ -58,6 +83,8 @@
                     $stmt->bindParam(':name', $name);
                     $stmt->bindParam(':description', $description);
                     $stmt->bindParam(':price', $price);
+                    $stmt->bindParam(':manufacture_date', $manufacture_date);
+                    $stmt->bindParam(':expired_date', $expired_date);
                     // specify when this record was inserted to the database
                     $created = date('Y-m-d H:i:s');
                     $stmt->bindParam(':created', $created);
@@ -89,14 +116,35 @@
                     <td><textarea name='description' class='form-control'></textarea></td>
                 </tr>
                 <tr>
+                    <td>Product Category</td>
+                    <td>
+                        <select name="product_cat" id="product_cat">
+                            <?php
+                            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                extract($row);
+                                echo "<option value ='$product_cat_name'>$product_cat_name</option>";
+                            }
+                            ?>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
                     <td>Price</td>
                     <td><input type='text' name='price' class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Manufacture date</td>
+                    <td><input type='date' name='manufacture_date' class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Expired date</td>
+                    <td><input type='date' name='expired_date' class='form-control' /></td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
                         <input type='submit' value='Save' class='btn btn-primary' />
-                        <a href='index.php' class='btn btn-danger'>Back to read products</a>
+                        <a href='product_listing.php' class='btn btn-danger'>Back to read products</a>
                     </td>
                 </tr>
             </table>
