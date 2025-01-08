@@ -1,4 +1,12 @@
 <!DOCTYPE HTML>
+<?php
+if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+    header('Location: login.php'); // Redirect to login page if not logged in
+    exit();
+}
+session_start();
+session_regenerate_id(true);
+?>
 <html>
 
 <head>
@@ -23,6 +31,8 @@
         include 'menu.php';
 
         if ($_POST) {
+            // Check if the user is logged in
+
             // include database connection
             include 'config/database.php';
             try {

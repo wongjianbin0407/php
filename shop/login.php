@@ -1,4 +1,8 @@
 <!DOCTYPE HTML>
+<?php
+session_start();
+session_regenerate_id(true);
+?>
 <html>
 
 <head>
@@ -47,14 +51,17 @@
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
             <div class="form-floating">
-                <input type="email" class="form-control" name="cincaila" id="floatingInput" placeholder="name@example.com">
+                <input type="text" class="form-control" name="cincaila" id="floatingInput" placeholder="name@example.com">
                 <label for="floatingInput">Email/Username</label>
             </div>
             <div class="form-floating">
                 <input type="password" class="form-control" name="sidanla" id="floatingPassword" placeholder="Password">
                 <label for="floatingPassword">Password</label>
             </div>
+
             <?php
+            include 'config/database.php';
+
             if ($_POST) {
                 // posted values
                 $email = $_POST['cincaila'];
@@ -75,6 +82,34 @@
                         echo "<li>{$error}</li>";
                     }
                     echo "</ul></div>";
+                } else {
+                    // Query to check if email or username exists
+                    $query = "SELECT username, password, account_status FROM customer WHERE username = ? LIMIT 1";
+
+                    $stmt = $con->prepare($query);
+                    $stmt->bindParam(1, $email);
+                    $stmt->execute();
+                    $num = $stmt->rowCount();
+                    if ($num > 0) {
+                        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                        $hashed_password = $row['password'];
+                        $fetch_status = $row['account_status'];
+                        if ($password == $hashed_password) {
+                            if ($fetch_status == 1) {
+                                $_SESSION['user_id'] = 1; // Example user ID
+                                $_SESSION['username'] = $email;
+                                $_SESSION['is_logged_in'] = true; // Login flag
+                                header("Location: product_listing.php");
+                                exit();
+                            } else {
+                                echo "<div class='alert alert-success'>Account not active</div>";
+                            }
+                        } else {
+                            echo "<div class='alert alert-danger'>Invalid password.</div>";
+                        }
+                    } else {
+                        echo "<div class='alert alert-danger'>Invalid username or email.</div>";
+                    }
                 }
             }
             ?>
