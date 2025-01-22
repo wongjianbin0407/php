@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 15, 2025 at 04:41 AM
+-- Generation Time: Jan 22, 2025 at 04:40 AM
 -- Server version: 8.3.0
 -- PHP Version: 8.2.18
 
@@ -80,8 +80,8 @@ INSERT INTO `products` (`id`, `name`, `description`, `product_cat`, `price`, `pr
 (5, 'Trash Can', 'It will help you maintain cleanliness.', 6, 3.95, 0, '2024-06-07', '0000-00-00', '2015-08-02 12:16:08', '2025-01-05 15:05:57'),
 (6, 'Mouse', 'Very useful if you love your computer.', 5, 11.35, 0, '2024-10-12', '0000-00-00', '2015-08-02 12:17:58', '2025-01-05 15:06:15'),
 (7, 'Earphone', 'You need this one if you love music.', 4, 7, 0, '2024-11-10', '0000-00-00', '2015-08-02 12:18:21', '2025-01-05 15:06:26'),
-(8, 'Pillow', 'Sleeping well is important.', 6, 8.99, 0, '2024-09-27', '0000-00-00', '2015-08-02 12:18:56', '2025-01-05 15:06:42'),
-(10, 'earphone (IEM)', 'in-ear monitor', 4, 99.9, 0, '2024-09-02', '0000-00-00', '2024-12-13 02:35:36', '2025-01-05 15:06:54');
+(8, 'Pillow', 'Sleeping well is important.', 6, 8.99, 0, '2024-09-27', '2025-02-20', '2015-08-02 12:18:56', '2025-01-15 07:17:46'),
+(10, 'earphone (IEM)', 'in-ear monitor', 9, 99.9, 10, '2024-09-04', '2025-02-26', '2024-12-13 02:35:36', '2025-01-15 06:40:36');
 
 -- --------------------------------------------------------
 
