@@ -54,39 +54,43 @@
 
         <?php
         // check if form was submitted
-        if ($_POST) {
+        if ($_POST)
             try {
                 // write update query
                 // in this case, it seemed like we have so many fields to pass and
                 // it is better to label them and not use question marks
-                $query = "UPDATE customer
-                  SET username=:username, password=:password, firstname=:firstname, lastname=:lastname, gender=:gemder, dob=:dob WHERE username = ?";
-                // prepare query for excecution
-                $stmt = $con->prepare($query);
-                $stmt->bindParam(1, $name);
                 // posted values
-                $password = htmlspecialchars(strip_tags($_POST['password']));
+                $current_password = htmlspecialchars(strip_tags($_POST['password']));
+                $new_password = htmlspecialchars(strip_tags($_POST['new_password']));
+                $confirm_password = htmlspecialchars(strip_tags($_POST['confirm_password']));
                 $firstname = htmlspecialchars(strip_tags($_POST['firstname']));
                 $lastname = htmlspecialchars(strip_tags($_POST['lastname']));
 
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
                 $dob = htmlspecialchars(strip_tags($_POST['dob']));
 
-                if (empty($password)) {
-                    $errors[] = "Description is required.";
+                if ($new_password !== $confirm_password) {
+                    $errors[] = "New password do not match.";
                 }
                 if (empty($firstname)) {
-                    $errors[] = "Product category is required.";
+                    $errors[] = "Firstname is required.";
                 }
                 if (empty($lastname)) {
-                    $errors[] = "Price is required.";
+                    $errors[] = "Lastname is required.";
                 }
                 if (isset($_POST['gender']) && !empty($_POST['gender'])) {
                     $gender = htmlspecialchars(strip_tags($_POST['gender']));
                 } else {
-                    $errors[] = "error";
+                    $errors[] = "Gender is required.";
                 }
                 if (empty($dob)) {
-                    $errors[] = "Expired date is required.";
+                    $errors[] = "Dob is required.";
+                }
+                if (!empty($current_password)) {
+                    if (empty($new_password) || empty($confirm_password)) {
+                        $errors[] = "Your new password cannot be empty.";
+                    }
                 }
 
                 // If there are errors, display them
@@ -97,13 +101,33 @@
                     }
                     echo "</ul></div>";
                 } else {
-                    // bind the parameters
-                    $stmt->bindParam(':username', $user);
-                    $stmt->bindParam(':password', $password);
-                    $stmt->bindParam(':firstname', $firstname);
-                    $stmt->bindParam(':lastname', $lastname);
-                    $stmt->bindParam(':gender', $gender);
-                    $stmt->bindParam(':dob', $dob);
+                    if (empty($current_password)) {
+                        $query = "UPDATE customer
+                         SET firstname=:firstname, lastname=:lastname, gender=:gender, dob=:dob WHERE username =:username";
+                        // prepare query for excecution
+                        $stmt = $con->prepare($query);
+                        $stmt->bindParam(':username', $name);
+                        // bind the parametersxxxxxxxxxxxxxx
+                        $stmt->bindParam(':firstname', $firstname);
+                        $stmt->bindParam(':lastname', $lastname);
+                        $stmt->bindParam(':gender', $gender);
+                        $stmt->bindParam(':dob', $dob);
+                        $stmt->execute();
+                    } else if ($current_password === $row['password']) {
+                        $query = "UPDATE customer
+                         SET password=:password, firstname=:firstname, lastname=:lastname, gender=:gender, dob=:dob WHERE username =:username";
+                        // prepare query for excecution
+                        $stmt = $con->prepare($query);
+                        $stmt->bindParam(':username', $name);
+                        // bind the parameters
+                        $stmt->bindParam(':password', $new_password);
+                        $stmt->bindParam(':firstname', $firstname);
+                        $stmt->bindParam(':lastname', $lastname);
+                        $stmt->bindParam(':gender', $gender);
+                        $stmt->bindParam(':dob', $dob);
+                        $stmt->execute();
+                    }
+
                     // Execute the query
                     if ($stmt->execute()) {
                         echo "<div class='alert alert-success'>Record was updated.</div>";
@@ -116,7 +140,7 @@
             catch (PDOException $exception) {
                 die('ERROR: ' . $exception->getMessage());
             }
-        } ?>
+        ?>
 
 
         <!--we have our html form here where new record information can be updated-->
@@ -124,14 +148,22 @@
             <table class='table table-hover table-responsive table-bordered'>
                 <tr>
                     <td>Password</td>
-                    <td><textarea name='password' class='form-control'><?php echo $pass;  ?></textarea></td>
+                    <td><input type='password' name='password' value="" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Your new password (Change if needed)</td>
+                    <td><input type='password' name='new_password' value="" class='form-control' /></td>
+                </tr>
+                <tr>
+                    <td>Confirm your new password</td>
+                    <td><input type='password' name='confirm_password' value="" class='form-control' /></td>
                 </tr>
                 <tr>
                     <td>First name</td>
                     <td><input type='text' name='firstname' value="<?php echo $firstname;  ?>" class='form-control' /></td>
                 </tr>
                 <tr>
-                    <td>Last name/td>
+                    <td>Last name</td>
                     <td><input type='text' name='lastname' value="<?php echo $lastname;  ?>" class='form-control' /></td>
                 </tr>
                 <tr>

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <?php
+include 'menu.php';
 session_start();
 session_regenerate_id(true);
 if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
@@ -28,7 +29,6 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
         <!-- html form to create product will be here -->
         <!-- PHP insert code will be here -->
         <?php
-        include 'menu.php';
 
         if ($_POST) {
             // Check if the user is logged in

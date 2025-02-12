@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <?php
+include 'menu.php';
 // Check if the user is logged in
 session_start();
 session_regenerate_id(true);
@@ -31,7 +32,6 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
         <?php
         // include database connection
         include 'config/database.php';
-        include 'menu.php';
 
         // delete message prompt will be here
 
@@ -61,13 +61,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
                 if (empty($price)) {
                     $errors[] = "Price is required.";
                 }
-                if (empty($manu)) {
-                    $errors[] = "Price is required.";
-                }
-                if (empty($price)) {
-                    $errors[] = "Price is required.";
-                }
-                if (empty($mnufacture_date)) {
+                if (empty($manufacture_date)) {
                     $errors[] = "Manufacture date is required.";
                 }
                 if (empty($expired_date)) {
@@ -85,7 +79,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
 
 
                     // insert query
-                    $query = "INSERT INTO products SET name=:name, description=:description, price=:price, created=:created";
+                    $query = "INSERT INTO products SET name=:name, description=:description, price=:price, manufacture_date=:manufacture_date, expired_date=:expired_date, created=:created";
                     // prepare query for execution
                     $stmt = $con->prepare($query);
                     // bind the parameters

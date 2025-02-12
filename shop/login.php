@@ -102,7 +102,7 @@ session_regenerate_id(true);
                                 header("Location: product_listing.php");
                                 exit();
                             } else {
-                                echo "<div class='alert alert-success'>Account not active</div>";
+                                echo "<div class='alert alert-danger'>Account not active</div>";
                             }
                         } else {
                             echo "<div class='alert alert-danger'>Invalid password.</div>";

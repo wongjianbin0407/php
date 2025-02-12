@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <?php
+include 'menu.php';
 // Check if the user is logged in
 session_start();
 session_regenerate_id(true);
@@ -24,16 +25,15 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
         </div>
 
         <?php
-
-
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'username';
+        $ascdesc = isset($_GET['ascordesc']) ? $_GET['ascordesc'] : 'asc';
         // include database connection
         include 'config/database.php';
-        include 'menu.php';
 
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT username, firstname, lastname, gender, dob FROM customer ORDER BY username DESC";
+        $query = "SELECT username, firstname, lastname, gender, dob FROM customer ORDER BY $sort $ascdesc";
         $stmt = $con->prepare($query);
         $stmt->execute();
 
@@ -41,7 +41,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
         $num = $stmt->rowCount();
 
         // link to create record form
-        echo "<a href='create.php' class='btn btn-primary m-b-1em'>Create New Product</a>";
+        echo "<a href='customer_create.php' class='btn btn-primary m-b-1em'>Create New Customer</a>";
 
         //check if more than 0 record found
         if ($num > 0) {
@@ -50,9 +50,9 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
 
             //creating our table heading
             echo "<tr>";
-            echo "<th>Username</th>";
-            echo "<th>FirstName</th>";
-            echo "<th>LastName</th>";
+            echo "<th>Username<a href='?ascordesc=asc&sort=username'> ⇃ </a><a href='?ascordesc=desc&sort=username'> ↾ </a></th>";
+            echo "<th>FirstName<a href='?ascordesc=asc&sort=FirstName'> ⇃ </a><a href='?ascordesc=desc&sort=FirstName'> ↾ </a></th>";
+            echo "<th>LastName<a href='?ascordesc=asc&sort=LastName'> ⇃ </a><a href='?ascordesc=desc&sort=LastName'> ↾ </a></th>";
             echo "<th>Gender</th>";
             echo "<th>Date of Birth</th>";
             echo "</tr>";

@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
 <?php
+include 'menu.php';
 session_start();
 session_regenerate_id(true);
 // Check if the user is logged in
@@ -25,23 +26,30 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
         </div>
 
         <?php
+        $sort = isset($_GET['sort']) ? $_GET['sort'] : 'id';
+        $ascdesc = isset($_GET['ascordesc']) ? $_GET['ascordesc'] : 'asc';
+
         // include database connection
         include 'config/database.php';
-        include 'menu.php';
 
         // delete message prompt will be here
 
         // select all data
-        $query = "SELECT id, name, description, price, product_cat_name FROM products INNER JOIN product_cat ON products.product_cat = product_cat_id ORDER BY id DESC";
+
+        // read current record's data
+
+        $query = "SELECT id, name, description, price, product_cat_name FROM products INNER JOIN product_cat ON products.product_cat = product_cat_id ORDER BY $sort $ascdesc";
         $stmt = $con->prepare($query);
-        $stmt->execute();
 
         // this is how to get number of rows returned
-        $num = $stmt->rowCount();
 
         // link to create record form
-        echo "<a href='create.php' class='btn btn-primary m-b-1em'>Create New Product</a>";
+        $stmt->execute();
 
+        echo "<a href='product_create.php' class='btn btn-primary m-b-1em'>Create New Product</a>";
+        echo "<a href='?keyword=keyword'> </a>";
+
+        $num = $stmt->rowCount();
         //check if more than 0 record found
         if ($num > 0) {
 
@@ -50,12 +58,13 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
             //creating our table heading
             echo "<tr>";
             echo "<th>ID</th>";
-            echo "<th>Name</th>";
+            echo "<th>Name<a href='?ascordesc=asc&sort=name'> ⇃ </a><a href='?ascordesc=desc&sort=name'> ↾ </a></th>";
             echo "<th>Description</th>";
             echo "<th>Product Category</th>";
-            echo "<th>Price</th>";
+            echo "<th>Price<a href='?ascordesc=asc&sort=Price'> ⇃ </a><a href='?ascordesc=desc&sort=Price'> ↾ </a></th>";
             echo "<th>Action</th>";
             echo "</tr>";
+
 
             // retrieve our table contents
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
